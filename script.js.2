@@ -1,0 +1,24 @@
+async function generateHashtags() {
+  const title = document.getElementById('videoTitle').value.trim();
+  const output = document.getElementById('output');
+
+  if (!title) {
+    output.innerHTML = "⚠️ Please enter a video title!";
+    return;
+  }
+
+  output.innerHTML = "⏳ Generating hashtags...";
+
+  try {
+    const res = await fetch(`/api/hashtags?title=${encodeURIComponent(title)}`);
+    const data = await res.json();
+
+    if (data.error) {
+      output.innerHTML = "❌ " + data.error;
+    } else {
+      output.innerHTML = data.hashtags.replace(/\n/g, " ");
+    }
+  } catch (err) {
+    output.innerHTML = "⚠️ Something went wrong. Please try again.";
+  }
+}
