@@ -1,29 +1,43 @@
 export default async function handler(req, res) {
   const title = req.query.title || 'youtube';
-  
+
   // Fetch similar words from Datamuse API
   const response = await fetch(`https://api.datamuse.com/words?ml=${encodeURIComponent(title)}`);
   const json = await response.json();
 
-  // Step 1: Pick top 25 most relevant words
-  const rawWords = json.slice(0, 25).map(w => w.word);
+  // Step 1: Take top 20 results
+  const rawWords = json.slice(0, 20).map(w => w.word);
 
-  // Step 2: Filter out unrelated/common junk words
+  // Step 2: Remove unrelated or generic words
   const blockedWords = [
-    'cat', 'dog', 'archive', 'mtv', 'trained', 'clip', 'means', 'like',
-    'admit', 'way', 'boom', 'get', 'guide', 'governance', 'wikihow'
+    'cat','dog','mtv','stopwatch','clip','train','trained','archive','archived',
+    'means','get','way','admit','fasten','cram','teach','find','stopwatch','speed'
   ];
+
   const filtered = rawWords.filter(w => !blockedWords.includes(w.toLowerCase()));
 
-  // Step 3: Smartly add relevant YouTube-related tags
+  // Step 3: Add core YouTube SEO tags
   const baseTags = [
-    'YouTubeTips', 'YouTubeGrowth', 'ContentCreation', 
-    'YouTubeBeginners', 'VideoMarketing', 'StartYouTubeChannel', 
-    'HowToCreateYouTubeChannel', 'YouTubeSetup', 'YTTips'
+    'YouTubeTips', 'YouTubeGrowth', 'ContentCreation', 'VideoMarketing',
+    'YouTubeBeginners', 'YTTips', 'YouTubeAlgorithm'
   ];
 
-  // Step 4: Merge and format hashtags
-  const hashtags = [...new Set([...baseTags, ...filtered])]
+  // Step 4: Create topic-related custom tags from user input
+  const userWords = title
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join('');
+
+  const topicTags = [
+    `HowTo${userWords}`,
+    `${userWords}Tutorial`,
+    `${userWords}Tips`,
+    `Learn${userWords}`,
+    `Improve${userWords}`
+  ];
+
+  // Step 5: Merge all hashtags cleanly
+  const hashtags = [...new Set([...topicTags, ...baseTags, ...filtered])]
     .slice(0, 15)
     .map(tag => `#${tag.replace(/\s+/g, '')}`);
 
