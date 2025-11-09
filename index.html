@@ -1,17 +1,23 @@
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>YT Hashtags Genie</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>🎥 YT Hashtags Genie</h1>
-    <p>Enter your YouTube title or topic 👇</p>
-    <textarea id="videoTitle" placeholder="e.g. How to grow YouTube channel fast"></textarea>
-    <button onclick="generateHashtags()">✨ Generate Hashtags</button>
-    <div id="output"></div>
+  <div class="app">
+    <h1>YT Hashtags Genie 🔮</h1>
+    <p>Enter your video title or topic to get trending hashtags</p>
+    <input type="text" id="videoTitle" placeholder="Ex: How to grow YouTube channel fast">
+    <button id="generateBtn">Generate Hashtags</button>
+
+    <div id="loader" class="hidden">Generating...</div>
+    <div id="result" class="hidden">
+      <h2>Trending Hashtags</h2>
+      <textarea id="hashtagsBox" readonly></textarea>
+      <button id="copyBtn">Copy Hashtags</button>
+    </div>
   </div>
   <script src="script.js"></script>
 </body>
